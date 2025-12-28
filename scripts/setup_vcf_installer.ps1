@@ -1,22 +1,24 @@
 # Author: William Lam
+# Contributor: Abbed Sedkaoui
 
-$ESXiServer = "esx01.vcf.lab"
+$ESXiServer = "vcf9-esx01.abidi.systems"
 $ESXiRootPassowrd = "VMware1!"
 
-$VCFInstallerVMName = "sddcm01"
-$VCFInstallerFQDN = "sddcm01.vcf.lab"
+
+$VCFInstallerVMName = "vcf9-sddcm01"
+$VCFInstallerFQDN = "vcf9-sddcm01.abidi.systems"
 $VCFInstallerRootPassword = "VMware1!VMware1!"
 $SSHKeys = ""
 
 $VCFFeatureProperties = @{
     "feature.vcf.internal.single.host.domain" = "true"
-    "feature.vcf.vgl-29121.single.host.domain=" = "true"
     "feature.vcf.vgl-43370.vsan.esa.sddc.managed.disk.claim" = "true"
 }
 
 $VCFDomainManagerProperties = @{
     "enable.speed.of.physical.nics.validation" = "false"
     "vsan.esa.sddc.managed.disk.claim" = "true"
+	"fsm.ValidateHostNfsDataStoreAction.skipCheck" = "true"
 }
 
 $VCFInstallerSoftwareDepot = "offline"
@@ -91,7 +93,8 @@ if($VCFInstallerSoftwareDepot -eq "offline") {
     }
 }
 
-$script += "echo 'y' | /opt/vmware/vcf/operationsmanager/scripts/cli/sddcmanager_restart_services.sh"
+
+$script += "echo 'y' | /opt/vmware/vcf/operationsmanager/scripts/cli/sddcmanager_restart_services.sh`n"
 
 $script | Out-File $scriptName
 
