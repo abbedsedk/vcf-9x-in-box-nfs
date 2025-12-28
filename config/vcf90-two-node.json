@@ -1,12 +1,13 @@
 {
   "sddcId": "vcf-m01",
-  "vcfInstanceName": "William Lam's VCF 9 Instance",
+  "vcfInstanceName": "Abbed Sedkaoui's VCF 9 Instance",
   "workflowType": "VCF",
-  "version": "9.0.0.0",
+  "version": "9.0.1.0",
   "ceipEnabled": false,
   "fipsEnabled": true,
   "skipEsxThumbprintValidation": true,
-  "skipGatewayPingValidation": true,
+  "_comment": "skipGatewayPingValidation to false because we have routable gateway. See https://knowledge.broadcom.com/external/article/382541/sddc-bring-up-failure-via-the-cloud-buil.html",
+  "skipGatewayPingValidation": false,
   "sddcManagerSpec": {
     "rootUserCredentials": {
       "username": "root",
@@ -16,7 +17,7 @@
       "username": "vcf",
       "password": "VMware1!VMware1!"
     },
-    "hostname": "sddcm01",
+    "hostname": "vcf9-sddcm01",
     "useExistingDeployment": true,
     "rootPassword": "VMware1!VMware1!",
     "sshPassword": "VMware1!VMware1!",
@@ -24,32 +25,33 @@
   },
   "dnsSpec": {
     "nameservers": [
-      "192.168.30.29"
+      "192.168.1.100"
     ],
-    "subdomain": "vcf.lab"
+    "subdomain": "abidi.systems"
   },
   "ntpServers": [
-    "104.167.215.195"
+    "192.168.1.100"
   ],
   "vcenterSpec": {
-    "vcenterHostname": "vc01",
+    "vcenterHostname": "vcf9-vc01.abidi.systems",
     "rootVcenterPassword": "VMware1!VMware1!",
     "vmSize": "small",
     "storageSize": "",
+	"adminUserSsoUsername": "administrator@vsphere.local",
     "adminUserSsoPassword": "VMware1!VMware1!",
     "ssoDomain": "vsphere.local",
     "useExistingDeployment": false
   },
   "hostSpecs": [
     {
-      "hostname": "esx01",
+      "hostname": "vcf9-esx01",
       "credentials": {
         "username": "root",
         "password": "VMware1!"
       }
     },
     {
-      "hostname": "esx02",
+      "hostname": "vcf9-esx02",
       "credentials": {
         "username": "root",
         "password": "VMware1!"
@@ -59,27 +61,29 @@
   "clusterSpec": {
     "clusterName": "VCF-Mgmt-Cluster",
     "datacenterName": "VCF-Datacenter",
-    "clusterEvcMode": "",
-    "clusterImageEnabled": true
+    "clusterEvcMode": ""
   },
   "datastoreSpec": {
-    "vsanSpec": {
-      "failuresToTolerate": 0,
-      "vsanDedup": false,
-      "esaConfig": {
-        "enabled": true
-      },
-      "datastoreName": "vsanDatastore"
+    "nfsDatastoreSpec": {
+        "datastoreName": "NFS-Mgmt-Datastore",
+        "nasVolume": {
+            "serverName": [
+                "172.30.50.250"
+            ],
+            "path": "/vcf1-mgmt",
+            "readOnly": false,
+            "enableBindToVmknic": false
+        }
     }
   },
   "nsxtSpec": {
     "nsxtManagerSize": "medium",
     "nsxtManagers": [
       {
-        "hostname": "nsx01a"
+        "hostname": "vcf9-nsx01a"
       }
     ],
-    "vipFqdn": "nsx01",
+    "vipFqdn": "vcf9-nsx01",
     "useExistingDeployment": false,
     "nsxtAdminPassword": "VMware1!VMware1!",
     "nsxtAuditPassword": "VMware1!VMware1!",
@@ -90,23 +94,23 @@
       "description": "ESXi Host Overlay TEP IP Pool",
       "subnets": [
         {
-          "cidr": "172.30.60.0/24",
+          "cidr": "172.30.1.0/24",
           "ipAddressPoolRanges": [
             {
-              "start": "172.30.60.150",
-              "end": "172.30.60.160"
+              "start": "172.30.1.150",
+              "end": "172.30.1.160"
             }
           ],
-          "gateway": "172.30.60.1"
+          "gateway": "172.30.1.253"
         }
       ]
     },
-    "transportVlanId": "60"
+    "transportVlanId": "301"
   },
   "vcfOperationsSpec": {
     "nodes": [
       {
-        "hostname": "vcf01",
+        "hostname": "vcf9-vcf01.abidi.systems",
         "rootUserPassword": "VMware1!VMware1!",
         "type": "master"
       }
@@ -117,65 +121,58 @@
     "loadBalancerFqdn": ""
   },
   "vcfOperationsFleetManagementSpec": {
-    "hostname": "opsfm01",
+    "hostname": "vcf9-opsfm01.abidi.systems",
     "rootUserPassword": "VMware1!VMware1!",
     "adminUserPassword": "VMware1!VMware1!",
     "useExistingDeployment": false
   },
   "vcfOperationsCollectorSpec": {
-    "hostname": "opsproxy01",
+    "hostname": "vcf9-opsproxy01.abidi.systems",
     "applicationSize": "small",
     "rootUserPassword": "VMware1!VMware1!",
-    "useExistingDeployment": false
-  },
-  "vcfAutomationSpec": {
-    "hostname": "auto01",
-    "adminUserPassword": "VMware1!VMware1!",
-    "ipPool": [
-      "172.30.0.31",
-      "172.30.0.32"
-    ],
-    "nodePrefix": "auto01",
-    "internalClusterCidr": "198.18.0.0/15",
     "useExistingDeployment": false
   },
   "networkSpecs": [
     {
       "networkType": "MANAGEMENT",
-      "subnet": "172.30.0.0/24",
-      "gateway": "172.30.0.1",
+      "subnet": "172.17.31.0/24",
+      "gateway": "172.17.31.253",
       "subnetMask": null,
       "includeIpAddress": null,
       "includeIpAddressRanges": null,
-      "vlanId": "30",
+      "vlanId": "1731",
       "mtu": "1500",
       "teamingPolicy": "loadbalance_loadbased",
       "activeUplinks": [
         "uplink1"
       ],
-      "standbyUplinks": [],
+      "standbyUplinks": [
+		"uplink2"
+	  ],
       "portGroupKey": "DVPG_FOR_MANAGEMENT"
     },
     {
       "networkType": "VM_MANAGEMENT",
-      "subnet": "172.30.0.0/24",
-      "gateway": "172.30.0.1",
+      "subnet": "172.17.31.0/24",
+      "gateway": "172.17.31.253",
       "subnetMask": null,
       "includeIpAddress": null,
       "includeIpAddressRanges": null,
-      "vlanId": "30",
+      "vlanId": "1731",
       "mtu": "1500",
       "teamingPolicy": "loadbalance_loadbased",
       "activeUplinks": [
         "uplink1"
       ],
-      "standbyUplinks": [],
+      "standbyUplinks": [
+		"uplink2"
+	  ],
       "portGroupKey": "DVPG_FOR_VM_MANAGEMENT"
     },
     {
       "networkType": "VMOTION",
       "subnet": "172.30.40.0/24",
-      "gateway": "172.30.40.1",
+      "gateway": "172.30.40.253",
       "subnetMask": null,
       "includeIpAddress": null,
       "includeIpAddressRanges": [
@@ -184,20 +181,22 @@
           "endIpAddress": "172.30.40.160"
         }
       ],
-      "vlanId": "40",
-      "mtu": "9000",
+      "vlanId": "3040",
+      "mtu": "1700",
       "teamingPolicy": "loadbalance_loadbased",
       "activeUplinks": [
         "uplink1"
       ],
-      "standbyUplinks": [],
+      "standbyUplinks": [
+		"uplink2"
+	  ],
       "portGroupKey": "DVPG_FOR_VMOTION"
     },
     {
-      "networkType": "VSAN",
+      "networkType": "NFS",
       "subnet": "172.30.50.0/24",
-      "gateway": "172.30.50.1",
-      "subnetMask": null,
+      "gateway": "172.30.50.253",
+      "subnetMask": "255.255.255.0",
       "includeIpAddress": null,
       "includeIpAddressRanges": [
         {
@@ -205,14 +204,16 @@
           "endIpAddress": "172.30.50.160"
         }
       ],
-      "vlanId": "50",
-      "mtu": "9000",
+      "vlanId": "3050",
+      "mtu": "1500",
       "teamingPolicy": "loadbalance_loadbased",
       "activeUplinks": [
         "uplink1"
       ],
-      "standbyUplinks": [],
-      "portGroupKey": "DVPG_FOR_VSAN"
+      "standbyUplinks": [
+		"uplink2"
+	  ],
+      "portGroupKey": "DVPG_FOR_NFS"
     }
   ],
   "dvsSpecs": [
@@ -222,9 +223,9 @@
         "MANAGEMENT",
         "VM_MANAGEMENT",
         "VMOTION",
-        "VSAN"
+        "NFS"
       ],
-      "mtu": "9000",
+      "mtu": "1700",
       "nsxtSwitchConfig": {
         "transportZones": [
           {
@@ -242,21 +243,22 @@
         {
           "uplink": "uplink1",
           "id": "vmnic0"
+        },
+        {
+          "uplink": "uplink2",
+          "id": "vmnic1"
         }
       ],
       "nsxTeamings": [
         {
           "standByUplinks": [],
           "policy": "LOADBALANCE_SRCID",
-          "activeUplinks": [
-            "uplink1"
-          ]
+		  "activeUplinks": [
+		  "uplink1"
+		   ]
         }
       ],
-      "lagSpecs": null,
-      "vmnics": [
-        "vmnic0"
-      ]
+      "lagSpecs": null
     }
   ]
 }
