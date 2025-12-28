@@ -16,6 +16,28 @@ Deploy a fully functional VMware Cloud Foundation (VCF) 9.x environment on a sin
 * [Blog References](#blog-references)
 
 ## Changelog
+* **12/27/25**
+  * related blog posts:
+    * [BOM](https://strivevirtually.net/post/1.-vcf-9.0-homelab-physical-setup-and-bom/)
+    * [Infra Services](https://strivevirtually.net/post/2.-vcf-9.0-homelab-infrasturcture-services-setup/)
+    * [Repeatable Wipe and Reload from Buildup to Validations](https://strivevirtually.net/post/3.-vcf-9.0-homelab-repeatable-wipe-and-reload-from-buildup-to-validations/)
+    * [Deploy on NFSv3 with Workarounds] coming soon
+  * Changed to 2 Node NFS datastore running on windows server
+  * Updated ks-esx01.cfg :
+    * to install on USB
+    * to provide Customized SMBIOS string variable, using [generate script](https://williamlam.com/2025/01/easier-method-to-simulate-custom-esxi-smbios-hardware-strings.html)
+    * to configure NFS and mounting the datatore with vmknic binding and 8 connections
+  * Updated ks-esx0.cfg :
+    * to install on USB
+    * to configure vmknic for NFS without mounting the datatore
+  * Updated setup_vcf_installer.ps1:
+    * to add in VCFDomainManagerProperties `"fsm.ValidateHostNfsDataStoreAction.skipCheck" = "true"` as per [KB](https://knowledge.broadcom.com/external/article/419338/unable-to-deploy-vcf-workload-domain-wit.html)
+    * to add a return in `"echo 'y' | /opt/vmware/vcf/operationsmanager/scripts/cli/sddcmanager_restart_services.sh"`
+  * Updated vcf90-two-node.json :
+    * to change Datastore to NFS without vkmnic binding `"enableBindToVmknic": false`
+    * to add NFS network
+    * to add vmnic1 to uplink2 and add uplink2 as standby in all networks except TEP
+    * to remove VCF Automation component because "Liveness and Readiness probe on api-server" failing repetitively and other critical kube pod issues in my environment
 
 * **10/20/25**
   * Updated VCF Installer configuration script to include VCF 9.0.1 enhancements
