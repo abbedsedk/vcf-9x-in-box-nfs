@@ -21,23 +21,28 @@ Deploy a fully functional VMware Cloud Foundation (VCF) 9.x environment on a sin
     * [BOM](https://strivevirtually.net/post/1.-vcf-9.0-homelab-physical-setup-and-bom/)
     * [Infra Services](https://strivevirtually.net/post/2.-vcf-9.0-homelab-infrasturcture-services-setup/)
     * [Repeatable Wipe and Reload from Buildup to Validations](https://strivevirtually.net/post/3.-vcf-9.0-homelab-repeatable-wipe-and-reload-from-buildup-to-validations/)
-    * [Deploy on NFSv3 with Workarounds] coming soon
+    * [Deploy on NFSv3 with Workarounds](https://strivevirtually.net/post/4.-vcf-9.0-homelab-deploy-on-nfsv3-with-workarounds/)
+      * provide solutions for the 2 fails occuring during deployment and Day 2 to fix NFS connectivity vmknic binding and 8 connections 
   * Changed to 2 Node NFS datastore running on windows server
   * Updated ks-esx01.cfg :
     * to install on USB
+    * to [sharing a single nvme device with nvme tiering esxi osdata vmfs datastore](https://williamlam.com/2024/12/sharing-a-single-nvme-device-with-nvme-tiering-esxi-osdata-vmfs-datastore.html)
+      * script from William Lam copied 'as is', only moved the variable on top, into the KS and it worked! 
     * to provide Customized SMBIOS string variable, using [generate script](https://williamlam.com/2025/01/easier-method-to-simulate-custom-esxi-smbios-hardware-strings.html)
-    * to configure NFS and mounting the datatore with vmknic binding and 8 connections
-  * Updated ks-esx0.cfg :
+    * to configure NFS and mounting the datastore with vmknic binding and 8 connections
+  * Updated ks-esx02.cfg :
     * to install on USB
-    * to configure vmknic for NFS without mounting the datatore
+    * to [share a single nvme device with nvme tiering esxi osdata vmfs datastore](https://williamlam.com/2024/12/sharing-a-single-nvme-device-with-nvme-tiering-esxi-osdata-vmfs-datastore.html)
+      * script from William Lam copied 'as is', only moved the variable on top, into the KS and it worked! 
+    * to configure vmknic for NFS without mounting the datastore
   * Updated setup_vcf_installer.ps1:
     * to add in VCFDomainManagerProperties `"fsm.ValidateHostNfsDataStoreAction.skipCheck" = "true"` as per [KB](https://knowledge.broadcom.com/external/article/419338/unable-to-deploy-vcf-workload-domain-wit.html)
     * to add a return in `"echo 'y' | /opt/vmware/vcf/operationsmanager/scripts/cli/sddcmanager_restart_services.sh"`
   * Updated vcf90-two-node.json :
     * to change Datastore to NFS without vkmnic binding `"enableBindToVmknic": false`
     * to add NFS network
-    * to add vmnic1 to uplink2 and add uplink2 as standby in all networks except TEP
-    * to remove VCF Automation component because "Liveness and Readiness probe on api-server" failing repetitively and other critical kube pod issues in my environment
+    * to add vmnic1 to uplink2 and add uplink2 as standby in all networks except TEP, require a switch of 8 ports
+    * to remove VCF Automation
 
 * **10/20/25**
   * Updated VCF Installer configuration script to include VCF 9.0.1 enhancements
