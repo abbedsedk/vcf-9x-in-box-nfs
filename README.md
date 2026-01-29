@@ -16,6 +16,11 @@ Deploy a fully functional VMware Cloud Foundation (VCF) 9.x environment on a sin
 * [Blog References](#blog-references)
 
 ## Changelog
+* **01/29/26**
+  * Updated ESXi and VM Network from 172.17.31.0/24 vlan 1731 to 172.30.0.0/24 vlan 300, because of local subnet clashes [172.17.x.x is used by docker and KINDnet (Kubernetes IN Docker) in VCF](https://kind.sigs.k8s.io/docs/user/known-issues/#local-subnet-clashes)
+  * Add simplified NSX Edge non-EPYC workaround
+  * related blog posts:
+    * [Offline Depot download metadata with VMUG Advantage Certified VCP download token](https://strivevirtually.net/post/5.-vcf-9.0-homelab-offline-depot-with-generated-download-token-for-certified-vcp-vcf-vmug-advantage-members/)
 * **12/27/25**
   * related blog posts:
     * [BOM](https://strivevirtually.net/post/1.-vcf-9.0-homelab-physical-setup-and-bom/)
