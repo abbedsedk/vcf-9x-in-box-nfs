@@ -33,7 +33,7 @@
     "192.168.1.100"
   ],
   "vcenterSpec": {
-    "vcenterHostname": "vcf9-vc01.abidi.systems",
+    "vcenterHostname": "vcf9-vc01",
     "rootVcenterPassword": "VMware1!VMware1!",
     "vmSize": "small",
     "storageSize": "",
@@ -61,7 +61,15 @@
   "clusterSpec": {
     "clusterName": "VCF-Mgmt-Cluster",
     "datacenterName": "VCF-Datacenter",
-    "clusterEvcMode": ""
+    "clusterEvcMode": "",
+	"resourcePoolSpecs": [
+		{
+			"name": "",
+			"type": "management",
+			"memoryReservationExpandable": true,
+			"memorySharesLevel": "high"
+		}
+	]
   },
   "datastoreSpec": {
     "nfsDatastoreSpec": {
@@ -110,7 +118,7 @@
   "vcfOperationsSpec": {
     "nodes": [
       {
-        "hostname": "vcf9-vcf01.abidi.systems",
+        "hostname": "vcf9-vcf01",
         "rootUserPassword": "VMware1!VMware1!",
         "type": "master"
       }
@@ -121,13 +129,13 @@
     "loadBalancerFqdn": ""
   },
   "vcfOperationsFleetManagementSpec": {
-    "hostname": "vcf9-opsfm01.abidi.systems",
+    "hostname": "vcf9-opsfm01",
     "rootUserPassword": "VMware1!VMware1!",
     "adminUserPassword": "VMware1!VMware1!",
     "useExistingDeployment": false
   },
   "vcfOperationsCollectorSpec": {
-    "hostname": "vcf9-opsproxy01.abidi.systems",
+    "hostname": "vcf9-opsproxy01",
     "applicationSize": "small",
     "rootUserPassword": "VMware1!VMware1!",
     "useExistingDeployment": false
@@ -135,12 +143,12 @@
   "networkSpecs": [
     {
       "networkType": "MANAGEMENT",
-      "subnet": "172.17.31.0/24",
-      "gateway": "172.17.31.253",
+      "subnet": "172.30.0.0/24",
+      "gateway": "172.30.0.253",
       "subnetMask": null,
       "includeIpAddress": null,
       "includeIpAddressRanges": null,
-      "vlanId": "1731",
+      "vlanId": "300",
       "mtu": "1500",
       "teamingPolicy": "loadbalance_loadbased",
       "activeUplinks": [
@@ -153,12 +161,12 @@
     },
     {
       "networkType": "VM_MANAGEMENT",
-      "subnet": "172.17.31.0/24",
-      "gateway": "172.17.31.253",
+      "subnet": "172.30.0.0/24",
+      "gateway": "172.30.0.253",
       "subnetMask": null,
       "includeIpAddress": null,
       "includeIpAddressRanges": null,
-      "vlanId": "1731",
+      "vlanId": "300",
       "mtu": "1500",
       "teamingPolicy": "loadbalance_loadbased",
       "activeUplinks": [
